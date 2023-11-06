@@ -1,5 +1,7 @@
 import 'dart:io';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:open_file/open_file.dart';
 import 'package:path_provider/path_provider.dart';
 
 class AppMethods {
@@ -93,5 +95,18 @@ class AppMethods {
 
     // If the MIME type is not found, default to a generic value (e.g., 'application/octet-stream')
     return mimeType ?? 'application/octet-stream';
+  }
+
+  static Future<void> showOpenWithAppDialog(BuildContext context, String filePath) async {
+    try {
+      final result = await OpenFile.open(filePath);
+      if (result.type == ResultType.done) {
+        print('File opened with success.');
+      } else {
+        print('File open failed: ${result.message}');
+      }
+    } catch (e) {
+      print('Error opening file: $e');
+    }
   }
 }

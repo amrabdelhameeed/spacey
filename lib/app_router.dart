@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:spacey/features/home/home.dart';
+import 'package:spacey/features/intro/intro_screen.dart';
 
 import '/core/constants/app_routes.dart';
 
@@ -13,12 +14,12 @@ class AppRouter {
             return Home();
           },
         );
-      // case AppRoutes.settings:
-      //   return MaterialPageRoute(
-      //     builder: (context) {
-      //       return SettingsPage();
-      //     },
-      //   );
+      case AppRoutes.intro:
+        return MaterialPageRoute(
+          builder: (context) {
+            return IntroScreen();
+          },
+        );
     }
   }
   // MaterialPageRoute<dynamic> _routeError() {

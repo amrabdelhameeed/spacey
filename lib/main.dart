@@ -5,6 +5,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:hive/hive.dart';
 import 'package:path_provider/path_provider.dart' as path;
+import 'package:spacey/features/home/home.dart';
 import '/core/constants/app_routes.dart';
 import 'app_router.dart';
 import 'core/constants/app_theme.dart';
@@ -15,7 +16,7 @@ import 'core/utils/app_database_keys.dart';
 import 'core/utils/shared_pref_helper.dart';
 import 'di.dart';
 
-String _initialRoute = AppRoutes.home;
+String _initialRoute = AppRoutes.intro;
 void main() async {
   Bloc.observer = MyBlocObserver();
   WidgetsFlutterBinding.ensureInitialized();
@@ -27,23 +28,30 @@ void main() async {
   ));
 }
 
-class MyApp extends StatelessWidget {
+class MyApp extends StatefulWidget {
   const MyApp({Key? key, required this.appRouter}) : super(key: key);
   final AppRouter appRouter;
+
+  @override
+  State<MyApp> createState() => _MyAppState();
+}
+
+class _MyAppState extends State<MyApp> {
   @override
   Widget build(BuildContext context) {
     return ValueListenableBuilder<Box<String>>(
       valueListenable: AppServicesDBprovider.listenable(),
-      builder: (context, box, _) {
+      builder: (__, ___, _) {
         return MaterialApp(
           theme: AppTheme.lightTheme,
           darkTheme: AppTheme.darkTheme,
           themeMode: AppServicesDBprovider.isDark() ? ThemeMode.dark : ThemeMode.light,
           locale: Locale(AppServicesDBprovider.currentLocale() ?? "en"),
           initialRoute: _initialRoute,
+          // home: Home(),
           supportedLocales: const [Locale('en'), Locale('ar')],
           localizationsDelegates: const [AppLocalizations.delegate, GlobalMaterialLocalizations.delegate, GlobalWidgetsLocalizations.delegate, GlobalCupertinoLocalizations.delegate],
-          onGenerateRoute: appRouter.onGenerateRoute,
+          onGenerateRoute: widget.appRouter.onGenerateRoute,
           debugShowCheckedModeBanner: false,
         );
       },
@@ -63,7 +71,7 @@ Future<void> _initHiveBoxes() async {
   Hive.init(dbPath.path);
   await Hive.openBox<String>(AppDatabaseKeys.appServicesKey).then((box) {
     if (box.get(AppDatabaseKeys.tokenKey) != null) {
-      _initialRoute = AppRoutes.home;
+      _initialRoute = AppRoutes.intro;
     }
     if (!box.containsKey(AppDatabaseKeys.localeKey)) {
       //if there is not any saved locale => save device locale

@@ -1,6 +1,8 @@
 class AppRoutes {
   AppRoutes._();
   static const home = '/home';
+  static const intro = '/intro';
+
   static const auth = '/auth';
   static const getStarted = '/getStarted';
   static const productDetails = '/productDetails';
